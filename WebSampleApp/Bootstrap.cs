@@ -11,7 +11,6 @@ namespace WebSampleApp
         {
 
             var config = new MyBundleConfig();
-
             config.AddContentGroup(new MyCustomCssBundle());
             config.AddContentGroup(new MyJsBundle());
             NancyBundle.Attach(container, config);

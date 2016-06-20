@@ -10,7 +10,7 @@ namespace WebSampleApp.Bundles
         public override List<IContentItem> Contents()
         {
             return new List<IContentItem>() {
-                new ContentFile("~/content/lib/jquery-3.0.0.js", eMinify.MinifyIt),
+                new ContentFile("~/content/lib/jquery-3.0.0.js", eMinify.DoNotMinifyIt),
                 new ContentFolder("~/content/app",eRecursive.ThisFolderAndChildrenFolders, eMinify.MinifyIt)
             };
         }
