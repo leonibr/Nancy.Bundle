@@ -1,0 +1,21 @@
+﻿
+input[type=text] {
+    padding: 7px;
+    font-weight: bold;
+    border-radius: 4px 4px;
+}
+
+input[type=button] {
+    padding: 7px;
+    border-radius: 5px;
+    border-width: 1px;
+    box-shadow: #c3c3c3 1px 1px inset;
+}
+
+input[type=button]:focus {
+    outline: 1px;
+}
+
+input[type=button]:hover {
+    cursor:pointer;
+}

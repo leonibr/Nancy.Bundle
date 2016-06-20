@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Bundle", "Nancy.Bundle\Nancy.Bundle.csproj", "{EC50C951-4453-415C-9045-D37FAC11EB4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSampleApp", "WebSampleApp\WebSampleApp.csproj", "{0C49F56C-0B71-4241-8C0E-F1CC538DF512}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC50C951-4453-415C-9045-D37FAC11EB4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC50C951-4453-415C-9045-D37FAC11EB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC50C951-4453-415C-9045-D37FAC11EB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC50C951-4453-415C-9045-D37FAC11EB4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C49F56C-0B71-4241-8C0E-F1CC538DF512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C49F56C-0B71-4241-8C0E-F1CC538DF512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C49F56C-0B71-4241-8C0E-F1CC538DF512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C49F56C-0B71-4241-8C0E-F1CC538DF512}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

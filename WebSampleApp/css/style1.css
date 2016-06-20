@@ -1,0 +1,19 @@
+﻿body {
+    font-family: 'Segoe UI';
+    font-size: 16px;
+}
+
+#canvas {
+    margin-top: 5px;
+    padding: 5px;
+    background-color: #e6e6e6;
+    color: #0722a4;
+    border: 1px inset;
+    border-radius:10px;
+    box-shadow: #808080 5px 5px none;
+    max-width: 300px;
+    height: 150px;
+    max-height: 300px;
+    overflow-y: scroll;
+
+}

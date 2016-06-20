@@ -1,0 +1,23 @@
+﻿@using Nancy.Bundle
+@using WebSampleApp.Bundles
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example view</title>
+	<meta charset="utf-8" />
+
+	<!--This Example uses key as string -->
+	@Html.Raw(Bundles.GetCssKey("my-css"))
+</head>
+<body>
+
+	<p>Example View</p>
+
+	<label for="textField">Name:</label>
+	<input id="textField" type="text" value="Name" />
+	<input id="btnOk" type="button" value="OK" />
+	<div id="canvas"></div>
+	<!--For strong type reasons this line uses an instance of the bundle to que the key-->
+  @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey()))
+</body>
+</html>
