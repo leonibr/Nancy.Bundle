@@ -1,7 +1,9 @@
+#Nancy.Bundle
 
-This project used the NancyFx wiki for bundle and minification to create a package. See websampleapp
+###This project used the NancyFx wiki for bundle and minification to create a package. See websampleapp. 
 
-Of course using then Nancy way.
+
+###Of course using the Nancy way.
 
 1. `Install-Package Nancy.Bundle`
 1. Use a `DefaultConfigSettings` class or create your own
@@ -100,8 +102,48 @@ Of course using then Nancy way.
 </head>
 <body>
 
-	<!--For strong type reasons this line uses an instance of the bundle to que the key-->
+	<!--For strong type reasons this line uses an instance of the bundle to get the key-->
   @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey()))
 </body>
 </html>
 ```
+
+##Debug vs Release
+
+In Debug mode will produce:
+```html
+<!-- In substitution of @Html.Raw(Bundles.GetCssKey("my-css")))-->
+	<link rel="stylesheet" href="/css/style2.css" />
+	<link rel="stylesheet" href="/css/style1.css" />
+
+	
+<!-- In substitution of @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey())-->
+	<script src="/content/lib/jquery-3.0.0.js"></script>
+	<script src="/content/app/app.js"></script>
+	<script src="/content/app/modules/javascript.js"></script>
+	<script src="/content/app/modules/javascriptFile2.js"></script>
+```
+In Release mode will produce
+```html
+<!-- In substitution of @Html.Raw(Bundles.GetCssKey("my-css")))-->
+	<link rel="stylesheet" href="/cli-bundles/public/css?r=23AE1B33C234C23E3B09673C" />
+
+<!-- In substitution of @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey())-->
+	<script scr="/cli-bundles/js?r=43AC3C23E32E24F234E3443AD"></script>
+```
+	
+##Road map: 
+
+1.  Async 
+1.  Return Http header `304 Not Modified` for etag aleready sent to client. Now it always return `200 OK` and always leave to the browser control the use of the client cache
+1.  Suggestions are welcome
+
+##Dependencies
+
+1. Nancy 
+1. SquishIt
+
+##Pull-Requests are welcome
+
+##License
+	MIT
