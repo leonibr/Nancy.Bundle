@@ -3,9 +3,13 @@
 ###This project used the NancyFx wiki for bundle and minification to create a package. See websampleapp. 
 
 
-###Of course using the Nancy way.
+ ###Of course using the Nancy way.
+####Click for [SourceBrowser](http://sourcebrowser.io/Browse/leonibr/Nancy.Bundle.git/)
+
+
 
 1. `Install-Package Nancy.Bundle`
+
 1. Use a `DefaultConfigSettings` class or create your own
 ```c#
 	using Nancy.Bundle.Settings;
@@ -87,6 +91,7 @@
 			NancyBundle.Attach(container, config);
 		}
 ```
+
 1. Then in your views (this is a Razor View, but should work in other view engines as well)
 
 ```html
@@ -123,7 +128,9 @@ In Debug mode will produce:
 	<script src="/content/app/modules/javascript.js"></script>
 	<script src="/content/app/modules/javascriptFile2.js"></script>
 ```
+
 In Release mode will produce
+
 ```html
 <!-- In substitution of @Html.Raw(Bundles.GetCssKey("my-css")))-->
 	<link rel="stylesheet" href="/cli-bundles/public/css?r=23AE1B33C234C23E3B09673C" />
@@ -135,7 +142,21 @@ In Release mode will produce
 ##Road map: 
 
 1.  Async 
-1.  Return Http header `304 Not Modified` for etag aleready sent to client. Now it always return `200 OK` and always leave to the browser control the use of the client cache
+1.  <s>Return Http header `304 Not Modified` for etag aleready sent to client. Now it always return `200 OK` and always leave to the browser control the use of the client cache</s>(Done!)
+
+Before, always returning `200`:
+<pre>
+Concurrency Level:	    400
+Time taken for tests:   37.458 seconds
+Complete requests:		10000
+</pre>
+
+After, returning `304`:
+<pre>
+Concurrency Level:      400
+Time taken for tests:   8.307 seconds
+Complete requests:	    10000
+</pre>
 1.  Suggestions are welcome
 
 ##Dependencies
