@@ -26,7 +26,7 @@
 		}
 	}
 ```
-1. Now create you bundles:
+1. Now create your bundles:
 ```c#
 	public class MyJsBundle : JSFiles
 	{
@@ -84,7 +84,7 @@
 ```c#
 		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
 		{
-
+			//Preferrable in ApplicationStartup
 			var config = new MyBundleConfig();
 			config.AddContentGroup(new MyCssBundle());
 			config.AddContentGroup(new MyJsBundle());
@@ -107,7 +107,9 @@
 </head>
 <body>
 
-	<!--For strong type reasons this line uses an instance of the bundle to get the key-->
+	<!--For strong type reasons this line uses an instance of the bundle to get the key
+	    This way you get help from intellisense
+	-->
   @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey()))
 </body>
 </html>
