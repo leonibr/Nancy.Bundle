@@ -9,11 +9,11 @@ namespace Nancy.Bundle
         {
             try
             {
+                string linkTags;
 #if DEBUG
-                string  linkTags = SquishIt.Framework.Bundle.Css().RenderNamed(key + "-debug");
-#endif
-#if !DEBUG
-                string linkTags = SquishIt.Framework.Bundle.Css().RenderCachedAssetTag(key);
+                linkTags = SquishIt.Framework.Bundle.Css().RenderNamed(key + "-debug");
+#else
+                linkTags = SquishIt.Framework.Bundle.Css().RenderCachedAssetTag(key);
 #endif
                 return linkTags;
             }
@@ -30,11 +30,11 @@ namespace Nancy.Bundle
         {
             try
             {
+                string scriptTags;
 #if DEBUG
-            string scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderNamed(key + "-debug");
-#endif
-#if !DEBUG
-                string scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderCachedAssetTag(key);
+                scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderNamed(key + "-debug");
+#else
+                scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderCachedAssetTag(key);
 #endif
                 return scriptTags;
             }
