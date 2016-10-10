@@ -18,6 +18,9 @@
 
 		public class MyBundleConfig : DefaultConfigSettings
 		{
+		        public MyBundleConfig(List<IContentsGroup> contents) : base(contents)
+			{
+			}
 			//optional override
 			public override string CommonAssetsRoute
 			{
