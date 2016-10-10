@@ -198,7 +198,7 @@ Complete requests:	    10000
 1. Nancy 
 1. SquishIt
 
-##Chage List
+##Change List
 
 1. Version: 0.0.4 (10/10/2016)
 	1. (Breaking change) - Remove TinyIoCContainer Dependency, works with any IoC of your choice
