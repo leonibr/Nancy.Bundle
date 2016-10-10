@@ -3,6 +3,7 @@
     public abstract class CSSFiles : AbstractFiles, ICssType
     {
 
+
     }
 
 }

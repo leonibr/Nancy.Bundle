@@ -9,8 +9,8 @@ namespace WebSampleApp.Bundles
         {
             return new List<Nancy.Bundle.IContentItem>()
             {
-                new ContentFile("~/css/style2.css", eMinify.MinifyIt),
-                new ContentFile("~/css/style1.css", eMinify.MinifyIt)
+                new ContentFile("~/content/css/style2.css", eMinify.MinifyIt),
+                new ContentFile("~/content/css/style1.css", eMinify.MinifyIt)
 
             };
         }

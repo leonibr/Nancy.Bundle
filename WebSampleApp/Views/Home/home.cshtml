@@ -7,11 +7,11 @@
 	<meta charset="utf-8" />
 
 	<!--This Example uses key as string -->
-	@Html.Raw(Bundles.GetCssKey("my-css"))
+	@Html.Raw(Bundles.GetCssKey("my-css-debug"))
 </head>
 <body>
 
-	<p>Example View</p>
+	<p>Example View <a href="/test">goto to test view</a></p>
 
 	<label for="textField">Name:</label>
 	<input id="textField" type="text" value="Name" />

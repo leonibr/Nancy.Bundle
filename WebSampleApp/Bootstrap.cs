@@ -1,7 +1,10 @@
-﻿using Nancy.Bootstrapper;
+﻿using Nancy;
+using Nancy.Bootstrapper;
 using Nancy.Bundle;
+using Nancy.Bundle.Settings;
+using Nancy.Diagnostics;
 using Nancy.TinyIoc;
-using WebSampleApp.Bundles;
+
 
 namespace WebSampleApp
 {
@@ -10,10 +13,19 @@ namespace WebSampleApp
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
 
-            var config = new MyBundleConfig();
-            config.AddContentGroup(new MyCustomCssBundle());
-            config.AddContentGroup(new MyJsBundle());
-            NancyBundle.Attach(container, config);
+            StaticConfiguration.EnableRequestTracing = true;
+            //NancyBundle.Attach();
+            var config = container.Resolve<IConfigSettings>();
+            NancyBundle.Attach(config);
+
+        }
+
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get
+            {
+                return new DiagnosticsConfiguration() { Password = @"diagnostic" };
+            }
         }
     }
 }

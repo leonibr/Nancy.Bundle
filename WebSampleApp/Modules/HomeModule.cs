@@ -8,6 +8,10 @@
             {
                 return View["home"];
             };
+            Get["/test"] = _ =>
+            {
+                return View["test"];
+            };
         }
     }
 }

@@ -12,20 +12,10 @@ namespace Nancy.Bundle
 
         abstract public List<IContentItem> Contents();
 
-        public virtual string DebugKey()
+        public string DebugKey
         {
-            return this.ReleaseKey() + "-debug";
+            get { return this.ReleaseKey() + "-debug"; }
         }
-
-        //public virtual string DebugUrl()
-        //{
-        //    return this.ReleaseUrl();
-        //}
-
-
-
-
-
 
     }
 }

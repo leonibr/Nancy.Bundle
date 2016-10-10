@@ -1,17 +1,18 @@
 ﻿using Nancy.Bundle.Settings;
 using SquishIt.Framework;
-using System.IO;
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System;
 using System.Threading;
-using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Nancy.Bundle.Modules
 {
     public class AssetsModule : NancyModule
     {
+
+
         public AssetsModule(IConfigSettings config) : base(config.CommonAssetsRoute)
         {
 
@@ -23,66 +24,61 @@ namespace Nancy.Bundle.Modules
             var jsGroups = config.ListOfContentGroups.OfType<IJsType>();
             foreach (ICssType item in cssGroups.ToList())
             {
-
-
-#if !DEBUG
-                Get[item.ReleaseUrl()] = _ => CreateResponse(SquishIt.Framework.Bundle.Css().RenderCached(item.ReleaseKey()), Configuration.Instance.CssMimeType);
-#endif
-
+                Get["Nancy.Bundle(key:" + item.ReleaseKey() + ")", item.ReleaseUrl(), true] = async (c, x) => await CreateResponse(SquishIt.Framework.Bundle.Css().RenderCached(item.ReleaseKey()), Configuration.Instance.CssMimeType);
             }
 
 
             foreach (IJsType item in jsGroups.ToList())
             {
-
-#if !DEBUG
-
-                Get[item.ReleaseUrl()] = _ => CreateResponse(SquishIt.Framework.Bundle.JavaScript().RenderCached(item.ReleaseKey()), Configuration.Instance.JavascriptMimeType);
-#endif
-
+                Get["Nancy.Bundle(key:" + item.ReleaseKey() + ")", item.ReleaseUrl(), true] = async (c, x) => await CreateResponse(SquishIt.Framework.Bundle.JavaScript().RenderCached(item.ReleaseKey()), Configuration.Instance.JavascriptMimeType);
             }
 
         }
 
-        private static Task AddEtagToResponseHeader(NancyContext context, CancellationToken cancel)
+        private static Task<Response> AddEtagToResponseHeader(NancyContext context, CancellationToken cancel)
         {
-            return new Task(() =>
+            if (cancel.IsCancellationRequested)
+                return NullResponse;
+            return Task<Response>.Factory.StartNew(() =>
             {
                 string queryParam = context.Request.Query["r"];
                 if (queryParam != null)
                     context.Response.WithHeader("ETag", queryParam);
                 context.Response.WithHeader("Date", DateTime.Now.ToUniversalTime().ToString());
-
+                return context.Response;
             });
 
         }
 
 
-        private Response CheckCacheHeaderFromRequest(NancyContext context)
+        private static Task<Response> CheckCacheHeaderFromRequest(NancyContext context, CancellationToken cancel)
         {
 
             try
             {
-                string queryParam = Context.Request.Query["r"];
-                string ifNoneMatch = Context.Request.Headers.IfNoneMatch.FirstOrDefault();
+                if (cancel.IsCancellationRequested)
+                    return NullResponse;
 
-                if ( ifNoneMatch!=null && queryParam != null && ifNoneMatch.Contains(queryParam))
+                string queryParam = context.Request.Query["r"];
+                string ifNoneMatch = context.Request.Headers.IfNoneMatch.FirstOrDefault();
+
+                if (ifNoneMatch != null && queryParam != null && ifNoneMatch.Contains(queryParam))
                 {
-                    return HttpStatusCode.NotModified;
+                    return NotModifiedResponse;
                 }
-                return null;
+                return NullResponse;
             }
             catch (Exception e)
             {
                 Debug.Write(e);
-                return null;
+                return NullResponse;
             }
 
 
 
         }
 
-        private Response CreateResponse(string content, string contentType)
+        private async Task<Response> CreateResponse(string content, string contentType)
         {
 
             var response = new Nancy.Response();
@@ -91,20 +87,42 @@ namespace Nancy.Bundle.Modules
             var data = Encoding.UTF8.GetBytes(content);
 
 
-            response.Contents = stream =>
+            response.Contents = async stream =>
            {
-               //stream.Seek(0, SeekOrigin.Begin);
-               stream.Write(data, 0, data.Length);
+               await stream.WriteAsync(data, 0, data.Length);
            };
 
             response.StatusCode = HttpStatusCode.OK;
 
-
-
-
-            return response;
+            return await Task<Response>.Factory.StartNew(() =>
+            {
+                return response;
+            });
 
 
         }
+
+        private static Task<Response> NullResponse
+        {
+            get
+            {
+                return Task<Response>.Factory.StartNew(() =>
+                 {
+                     return null;
+                 });
+            }
+        }
+
+        private static Task<Response> NotModifiedResponse
+        {
+            get
+            {
+                return Task<Response>.Factory.StartNew(() =>
+                {
+                    return HttpStatusCode.NotModified;
+                });
+            }
+        }
+
     }
 }

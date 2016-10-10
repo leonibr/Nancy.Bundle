@@ -10,11 +10,14 @@ namespace Nancy.Bundle
             try
             {
                 string linkTags;
-#if DEBUG
-                linkTags = SquishIt.Framework.Bundle.Css().RenderNamed(key + "-debug");
-#else
-                linkTags = SquishIt.Framework.Bundle.Css().RenderCachedAssetTag(key);
-#endif
+                if (key.Contains("-debug"))
+                {
+                    linkTags = SquishIt.Framework.Bundle.Css().RenderNamed(key);
+                }
+                else
+                {
+                    linkTags = SquishIt.Framework.Bundle.Css().RenderCachedAssetTag(key);
+                }
                 return linkTags;
             }
             catch (System.Exception e)
@@ -31,11 +34,14 @@ namespace Nancy.Bundle
             try
             {
                 string scriptTags;
-#if DEBUG
-                scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderNamed(key + "-debug");
-#else
-                scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderCachedAssetTag(key);
-#endif
+                if (key.Contains("-debug"))
+                {
+                    scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderNamed(key);
+                }
+                else
+                {
+                    scriptTags = SquishIt.Framework.Bundle.JavaScript().RenderCachedAssetTag(key);
+                }
                 return scriptTags;
             }
             catch (System.Exception e)

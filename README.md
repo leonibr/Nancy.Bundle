@@ -2,97 +2,124 @@
 
 ###This project used the NancyFx wiki for bundle and minification to create a package. See websampleapp. 
 
+###Of course using the Nancy way.
 
- ###Of course using the Nancy way.
 ####Click for [SourceBrowser](http://sourcebrowser.io/Browse/leonibr/Nancy.Bundle.git/)
 
+####Now get all route keys in Nancy Diagnostics
 
+<img src="nancy-diagnostic-routes.png">
 
 1. `Install-Package Nancy.Bundle`
 
-1. Use a `DefaultConfigSettings` class or create your own
-```c#
-	using Nancy.Bundle.Settings;
+1. You must create a ConfigSettings class that inherits from `DefaultConfigSettings`. Only one for project.
+	```c#
+		using Nancy.Bundle.Settings;
 
-	public class MyBundleConfig : DefaultConfigSettings
-	{
-		public override string CommonAssetsRoute
+		public class MyBundleConfig : DefaultConfigSettings
 		{
-			get
+			//optional override
+			public override string CommonAssetsRoute
 			{
-				//The default route is '/assets' now changing to '/cli-bundles'
-				return "/cli-bundles";
+				get
+				{
+					//The default route is '/assets' now changing to '/cli-bundles'
+					return "/cli-bundles";
+				}
 			}
 		}
-	}
-```
+	```
 1. Now create your bundles:
-```c#
-	public class MyJsBundle : JSFiles
-	{
+	```c#
+		public class MyJsBundle : JSFiles
+		{
 
 
-		public override List<IContentItem> Contents()
-		{
-			return new List<IContentItem>() {
-				//order is important
-				new ContentFile("~/content/lib/jquery-3.0.0.js", eMinify.DoNotMinifyIt),
-				new ContentFolder("~/content/app",eRecursive.ThisFolderAndChildrenFolders, eMinify.MinifyIt)
-			};
-		}
-
-		public override string ReleaseKey()
-		{
-			return "public-js";
-		}
-
-		public override string ReleaseUrl()
-		{
-			return "/js";
-			//this will result `<your-host>/cli-bundles/js` route for js
-		}
-	}
-```
-```c#
-	public class MyCssBundle : CSSFiles
-	{
-		public override List<IContentItem> Contents()
-		{
-			return new List<IContentItem>()
+			public override List<IContentItem> Contents()
 			{
-				//order is important
-				new ContentFile("~/css/style2.css", eMinify.MinifyIt),
-				new ContentFile("~/css/style1.css", eMinify.MinifyIt)
+				return new List<IContentItem>() {
+					//order is important
+					new ContentFile("~/content/lib/jquery-3.0.0.js", eMinify.DoNotMinifyIt),
+					new ContentFolder("~/content/app",eRecursive.ThisFolderAndChildrenFolders, eMinify.MinifyIt)
+				};
+			}
 
-			};
+			public override string ReleaseKey()
+			{
+				return "public-js";
+			}
+
+			public override string ReleaseUrl()
+			{
+				return "/js";
+				//this will result `<your-host>/cli-bundles/js` route for js
+			}
 		}
+	```
+	####Create a bundle using a existing one as a base bundle.####
 
-		public override string ReleaseKey()
+	```c#
+		public class PageStyle : MyJsBundle
 		{
-			return "public-css";
-		}
 
-		public override string ReleaseUrl()
+			public override List<IContentItem> Contents()
+			{
+				var contents = base.Contents();
+				contents.Add(new ContentFile("~/content/test/test.js", eMinify.MinifyIt));
+				return contents;
+			}
+
+			public override string ReleaseKey()
+			{
+			//If not overrided it will throw an exception for duplicate key. Because the `MyJsBundle.ReleaseKey` is aleready stored.
+				return "my-js-page";
+			}
+
+			public override string ReleaseUrl()
+			{
+				return "/page-js";
+			}
+		}
+	```
+
+	```c#
+		public class MyCssBundle : CSSFiles
 		{
-			return "/public/css";
-			//this will result `<your-host>/cli-bundles/public/css` route for css
-		}
-	}
-```
-1. Add bundles to `MyBundleConfig` class and attach to your applications bootstrapper class
+			public override List<IContentItem> Contents()
+			{
+				return new List<IContentItem>()
+				{
+					//order is important
+					new ContentFile("~/css/style2.css", eMinify.MinifyIt),
+					new ContentFile("~/css/style1.css", eMinify.MinifyIt)
 
-```c#
-		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
-		{
-			//Preferrable in ApplicationStartup
-			var config = new MyBundleConfig();
-			config.AddContentGroup(new MyCssBundle());
-			config.AddContentGroup(new MyJsBundle());
-			NancyBundle.Attach(container, config);
-		}
-```
+				};
+			}
 
-1. Then in your views (this is a Razor View, but should work in other view engines as well)
+			public override string ReleaseKey()
+			{
+				return "public-css";
+			}
+
+			public override string ReleaseUrl()
+			{
+				return "/public/css";
+				//this will result `<your-host>/cli-bundles/public/css` route for css
+			}
+		}
+	```
+	1. Enable `NancyBundle.Attach` to your applications bootstrapper class
+
+	```c#
+			protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+			{
+				//Preferrable in ApplicationStartup			
+				NancyBundle.Attach(container.Resolve<Nancy.Bundle.IConfigSettings>);
+			}
+	```
+
+1. Then in your views (this is a Razor View, but should work in other view engines as well).
+####Use the '-debug' to choose beetween a Release or Debug set of rendering.####
 
 ```html
 @using Nancy.Bundle
@@ -104,6 +131,8 @@
 	<meta charset="utf-8" />
 	<!--This Example uses key as string -->
 	@Html.Raw(Bundles.GetCssKey("my-css"))
+	<!-- or for Debug -->
+	@Html.Raw(Bundles.GetCssKey("my-css-debug"))
 </head>
 <body>
 
@@ -111,6 +140,8 @@
 	    This way you get help from intellisense
 	-->
   @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey()))
+  <!-- or for Debug -->
+  @Html.Raw(Bundle.GetJsKey(new PageStyle().ReleaseKey() + "-debug"))
 </body>
 </html>
 ```
@@ -119,12 +150,12 @@
 
 In Debug mode will produce:
 ```html
-<!-- In substitution of @Html.Raw(Bundles.GetCssKey("my-css")))-->
+<!-- In substitution of @Html.Raw(Bundles.GetCssKey("my-css-debug")))-->
 	<link rel="stylesheet" href="/css/style2.css" />
 	<link rel="stylesheet" href="/css/style1.css" />
 
 	
-<!-- In substitution of @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey())-->
+<!-- In substitution of @Html.Raw(Bundles.GetJsKey(new MyJsBundle().ReleaseKey() + "-debug")-->
 	<script src="/content/lib/jquery-3.0.0.js"></script>
 	<script src="/content/app/app.js"></script>
 	<script src="/content/app/modules/javascript.js"></script>
@@ -142,8 +173,9 @@ In Release mode will produce
 ```
 	
 ##Road map: 
-
-1.  Async 
+1.  GZip compression. Now GZip compression is up web server (IIS/Nginx/etc), but in some cases you are not allowed to set this feature due to permission, or you are deploying a self host application where theres no web server.
+1.  Interactive Diagnostics to show the path of content files. Now only show the routes.
+1.  <s>Async - Make all responses asynchronous</s>(Done!) 
 1.  <s>Return Http header `304 Not Modified` for etag aleready sent to client. Now it always return `200 OK` and always leave to the browser control the use of the client cache</s>(Done!)
 
 Before, always returning `200`:
@@ -165,6 +197,17 @@ Complete requests:	    10000
 
 1. Nancy 
 1. SquishIt
+
+##Chage List
+
+1. Version: 0.0.4 (10/10/2016)
+	1. (Breaking change) - Remove TinyIoCContainer Dependency, works with any IoC of your choice
+	1. (Breaking change) - Debug/Release mode must be explicit at key name
+	1. It will throw a duplicate key exception if there are duplicate `ReleaseKey`
+	1. All routes are asynchronous 
+1. Version: 0.0.3 - Issue #1
+1. Version: 0.0.2 - Return 304 (23/06/2016)
+1. Version: 0.0.1 - First release (20/06/2016)
 
 ##Pull-Requests are welcome
 

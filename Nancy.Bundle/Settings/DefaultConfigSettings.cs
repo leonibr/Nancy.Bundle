@@ -1,8 +1,13 @@
 ﻿
 
+using System.Collections.Generic;
+
 namespace Nancy.Bundle.Settings
 {
-    public class DefaultConfigSettings : AbastractConfigSettings
+    public abstract class DefaultConfigSettings : AbastractConfigSettings
     {
+        public DefaultConfigSettings(List<IContentsGroup> contents) : base(contents)
+        {
+        }
     }
 }

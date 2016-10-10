@@ -1,4 +1,5 @@
-﻿using Owin;
+﻿using Microsoft.Owin.Extensions;
+using Owin;
 
 namespace WebSampleApp
 {
@@ -7,6 +8,7 @@ namespace WebSampleApp
         public void Configuration(IAppBuilder app)
         {
             app.UseNancy();
+            app.UseStageMarker(PipelineStage.MapHandler);
         }
     }
 }

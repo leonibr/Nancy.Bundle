@@ -1,7 +1,15 @@
-﻿namespace WebSampleApp.Bundles
+﻿using Nancy.Bundle;
+using Nancy.Bundle.Settings;
+using System.Collections.Generic;
+
+namespace WebSampleApp.Bundles
 {
-    public class MyBundleConfig : Nancy.Bundle.Settings.DefaultConfigSettings
+    public class MyBundleConfig : DefaultConfigSettings
     {
+        public MyBundleConfig(List<IContentsGroup> contents) : base(contents)
+        {
+        }
+
         public override string CommonAssetsRoute
         {
             get

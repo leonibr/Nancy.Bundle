@@ -9,9 +9,11 @@ namespace Nancy.Bundle.Settings
     public abstract class AbastractConfigSettings : IConfigSettings
     {
         private List<IContentsGroup> listOfGroups;
-        public AbastractConfigSettings()
+        private string _commonAssetsRoute = "/assets";
+
+        public AbastractConfigSettings(List<IContentsGroup> contents)
         {
-            this.listOfGroups = new List<IContentsGroup>();
+            this.listOfGroups = contents;
         }
         /// <summary>
         /// Common route path used by Nancy.Bundle to provide the assets. Override this if you want a different url or if you are already using this path in one of your own modules.
@@ -20,7 +22,11 @@ namespace Nancy.Bundle.Settings
         {
             get
             {
-                return "/assets";
+                return _commonAssetsRoute;
+            }
+            set
+            {
+                _commonAssetsRoute = value;
             }
         }
 

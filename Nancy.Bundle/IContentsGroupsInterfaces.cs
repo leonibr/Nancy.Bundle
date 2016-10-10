@@ -7,7 +7,7 @@ namespace Nancy.Bundle
 
         string ReleaseKey();
         string ReleaseUrl();
-        string DebugKey();
+        string DebugKey { get; }
         //string DebugUrl();
 
 

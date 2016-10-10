@@ -1,9 +1,10 @@
 ﻿using Nancy.Bundle.Settings;
-using Nancy.TinyIoc;
 using SquishIt.Framework.CSS;
 using SquishIt.Framework.JavaScript;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Nancy.Bundle
 {
@@ -11,11 +12,11 @@ namespace Nancy.Bundle
     {
         protected static string BasePathForTesting = "";
 
-        public static void Attach(TinyIoCContainer container, IConfigSettings config)
+        public static void Attach(IConfigSettings config)
         {
+            
+            Setup(config);
 
-            Setup(config, "");
-            container.Register<IConfigSettings>(config);
         }
 
         protected static JavaScriptBundle BuildJavaScriptBundle(List<IContentItem> contents)
@@ -35,25 +36,26 @@ namespace Nancy.Bundle
             return bundle;
         }
 
-        internal static void Setup(IConfigSettings config, string basePathForTesting = "")
+        internal static void Setup(IConfigSettings config)
         {
             try
             {
-                BasePathForTesting = basePathForTesting;
                 IEnumerable<ICssType> cssGroups = config.ListOfContentGroups.OfType<ICssType>().ToList();
-
+                Dictionary<string, string> chaves = new Dictionary<string, string>();
                 foreach (ICssType item in cssGroups)
                 {
+                    chaves.Add(item.ReleaseKey(), "");
                     BuildCssBundle(item.Contents()).ForceRelease().AsCached(item.ReleaseKey(), config.CommonAssetsRoute + item.ReleaseUrl());
-                    BuildCssBundle(item.Contents()).ForceDebug().AsNamed(item.DebugKey(), string.Empty);
+                    BuildCssBundle(item.Contents()).ForceDebug().AsNamed(item.DebugKey, string.Empty);
 
                 }
 
                 IEnumerable<IJsType> jsGroups = config.ListOfContentGroups.OfType<IJsType>().ToList();
                 foreach (IJsType item in jsGroups)
                 {
+                    chaves.Add(item.ReleaseKey(), "ReleaseKey");
                     BuildJavaScriptBundle(item.Contents()).ForceRelease().AsCached(item.ReleaseKey(), config.CommonAssetsRoute + item.ReleaseUrl());
-                    BuildJavaScriptBundle(item.Contents()).ForceDebug().AsNamed(item.DebugKey(), string.Empty);
+                    BuildJavaScriptBundle(item.Contents()).ForceDebug().AsNamed(item.DebugKey, string.Empty);
                 }
 
 
