@@ -12,11 +12,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-(Breaking change) - Remove TinyIoCContainer Dependency, works with any IoC of your choice
+(Breaking change) - TinyIoCContainer Extension method
 (Breaking change) - Debug/Release mode must be explicit at key name
-It will throw a duplicate key exception if there are duplicate ReleaseKey
+It will throw a duplicate key exception if there are duplicate `ReleaseKey`
 All routes are asynchronous
-      </releaseNotes>
+    </releaseNotes>
     <copyright>Copyright 2016</copyright>
 
   </metadata>
