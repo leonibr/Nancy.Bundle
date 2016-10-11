@@ -1,25 +1,28 @@
 ﻿using Nancy.Bundle.Settings;
+using Nancy.TinyIoc;
 using SquishIt.Framework.CSS;
 using SquishIt.Framework.JavaScript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Nancy.Bundle
 {
-    public class NancyBundle
+    public static class NancyBundle
     {
-        protected static string BasePathForTesting = "";
+        private static string BasePathForTesting = "";
 
-        public static void Attach(IConfigSettings config)
+        public static void AttachNancyBundle<ConfigImplementation>(this TinyIoCContainer container, Action<ConfigImplementation> config) where ConfigImplementation : class, IConfigSettings, new()
         {
-            
-            Setup(config);
+
+            var t = new ConfigImplementation();
+            config(t);
+            container.Register<IConfigSettings>(t);
+            Setup(t);
 
         }
 
-        protected static JavaScriptBundle BuildJavaScriptBundle(List<IContentItem> contents)
+        private static JavaScriptBundle BuildJavaScriptBundle(List<IContentItem> contents)
         {
             NancyJavascriptBundleGroup bundle = new NancyJavascriptBundleGroup();
             AddFilesToBundle(contents, bundle);
@@ -27,7 +30,7 @@ namespace Nancy.Bundle
             return bundle;
         }
 
-        protected static CSSBundle BuildCssBundle(List<IContentItem> contents)
+        private static CSSBundle BuildCssBundle(List<IContentItem> contents)
         {
 
             NancyCssBundleGroup bundle = new NancyCssBundleGroup();

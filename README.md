@@ -18,9 +18,6 @@
 
 		public class MyBundleConfig : DefaultConfigSettings
 		{
-		        public MyBundleConfig(List<IContentsGroup> contents) : base(contents)
-			{
-			}
 			//optional override
 			public override string CommonAssetsRoute
 			{
@@ -111,13 +108,19 @@
 			}
 		}
 	```
-	1. Enable `NancyBundle.Attach` to your applications bootstrapper class
+	1. Enable `AttachNancyBundle` to your applications bootstrapper class
 
 	```c#
 			protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
 			{
 				//Preferrable in ApplicationStartup			
-				NancyBundle.Attach(container.Resolve<Nancy.Bundle.IConfigSettings>);
+				container.AttachNancyBundle<MyBundleConfig>(cfg =>
+				{
+
+					cfg.AddContentGroup(new MyCustomCssBundle());
+					cfg.AddContentGroup(new MyJsBundle());
+					cfg.AddContentGroup(new PageStyle());
+				});
 			}
 	```
 
@@ -203,11 +206,12 @@ Complete requests:	    10000
 
 ##Change List
 
-1. Version: 0.0.4 (10/10/2016)
-	1. (Breaking change) - Remove TinyIoCContainer Dependency, works with any IoC of your choice
+1. Version: 0.0.5 (11/10/2016)
+	1. (Breaking change) - TinyIoCContainer Extension method
 	1. (Breaking change) - Debug/Release mode must be explicit at key name
 	1. It will throw a duplicate key exception if there are duplicate `ReleaseKey`
 	1. All routes are asynchronous 
+1. Version: 0.0.4 - BROKEN (git mistake)
 1. Version: 0.0.3 - Issue #1
 1. Version: 0.0.2 - Return 304 (23/06/2016)
 1. Version: 0.0.1 - First release (20/06/2016)

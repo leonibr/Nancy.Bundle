@@ -4,7 +4,7 @@ using Nancy.Bundle;
 using Nancy.Bundle.Settings;
 using Nancy.Diagnostics;
 using Nancy.TinyIoc;
-
+using WebSampleApp.Bundles;
 
 namespace WebSampleApp
 {
@@ -16,7 +16,13 @@ namespace WebSampleApp
             StaticConfiguration.EnableRequestTracing = true;
             //NancyBundle.Attach();
             var config = container.Resolve<IConfigSettings>();
-            NancyBundle.Attach(config);
+            
+            container.AttachNancyBundle<MyBundleConfig>(cfg =>
+            {
+                cfg.AddContentGroup(new MyCustomCssBundle());
+                cfg.AddContentGroup(new MyJsBundle());
+                cfg.AddContentGroup(new PageStyle());
+            });
 
         }
 

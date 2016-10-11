@@ -9,6 +9,8 @@ namespace Nancy.Bundle.Settings
         IEnumerable<IContentsGroup> ListOfContentGroups { get; }
 
         void AddContentGroup(IContentsGroup group);
+        
+
 
     }
 }
