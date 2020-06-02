@@ -1,3 +1,5 @@
+# This project is no longer been maintained.
+___
 # Nancy.Bundle
 
 ### This project uses the NancyFx wiki bundle and minification example as inspiration. See websampleapp.
