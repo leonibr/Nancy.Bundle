@@ -1,4 +1,4 @@
-# This project is no longer been maintained.
+# This project is no longer maintained.
 ___
 # Nancy.Bundle
 
